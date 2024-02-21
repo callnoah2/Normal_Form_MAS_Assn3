@@ -334,7 +334,6 @@ def main():
         identify_weakly_dominated_strategies(matrix)
         print("\n Identify Pure Strategy Equilibria")
         pure_strategy_equilibria = save_strategies(matrix, identify_pure_strategy_equilibria)
-        print(pure_strategy_equilibria)
         print("\nIdentify Pareto Optimal Solutions")
         pareto_optimal_solutions = save_strategies(matrix, identify_pareto_optimal_solutions)
         print("\nIdentify Minimax Strategies")
