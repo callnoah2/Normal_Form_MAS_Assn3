@@ -41,11 +41,11 @@ def identify_strictly_dominated_strategies(matrix):
     row_dominated = [False] * num_rows
     col_dominated = [False] * num_cols
 
-    # Check for strictly row dominance
+  # Check for strictly row dominance
     for i in range(num_rows):
         for j in range(num_rows):
             if i != j and not row_dominated[i]:
-                row_i_strict_dom = all(matrix[0][i][k] > matrix[0][j][k] for k in range(num_cols))
+                row_i_strict_dom = all(matrix[0][i][k] <  matrix[0][j][k] for k in range(num_cols))
                 if row_i_strict_dom:
                     row_dominated[i] = True
 
@@ -53,7 +53,7 @@ def identify_strictly_dominated_strategies(matrix):
     for k in range(num_cols):
         for l in range(num_cols):
             if k != l and not col_dominated[k]:
-                col_k_strict_dom = all(matrix[1][i][k] > matrix[1][i][l] for i in range(num_rows))
+                col_k_strict_dom = all(all(matrix[1][i][k] < matrix[1][i][l] for i in range(num_rows)) for k in range(num_cols))
                 if col_k_strict_dom:
                     col_dominated[k] = True
 
@@ -63,6 +63,7 @@ def identify_strictly_dominated_strategies(matrix):
     return row_dominated, col_dominated
 
 def print_normal_form_table(matrix):
+    print(matrix)
     num_rows = len(matrix[0])
     num_cols = len(matrix[0][0])
     
