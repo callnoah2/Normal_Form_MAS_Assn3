@@ -103,6 +103,17 @@ def identify_pure_strategy_equilibria(matrix):
     num_rows_player2 = len(matrix[1])
     num_cols_player2 = len(matrix[1][0])
 
+    # Get the header titles
+    col_headers = []
+    for i in range(num_cols_player1):
+        col_headers.append(chr(ord('Z') - i))
+    col_headers.reverse()
+
+    row_letters = []
+    
+    for i in range(num_rows_player1):
+        row_letters.append(chr(ord('A') + i))
+    
     pure_equilibria = []
 
     for i in range(num_rows_player1):
@@ -122,9 +133,126 @@ def identify_pure_strategy_equilibria(matrix):
                 raise
 
     for equilibrium in pure_equilibria:
-        print(f"Player 1 chooses strategy {equilibrium[0]}, Player 2 chooses strategy {equilibrium[1]}")
+        print(f"Player 1 chooses strategy {row_letters[equilibrium[0]]}, Player 2 chooses strategy {col_headers[equilibrium[1]]}")
 
     return pure_equilibria
+
+def identify_pareto_optimal_solutions(matrix):
+    num_rows_player1 = len(matrix[0])
+    num_cols_player1 = len(matrix[0][0])
+
+    num_rows_player2 = len(matrix[1])
+    num_cols_player2 = len(matrix[1][0])
+
+        # Get the header titles
+    col_headers = []
+    for i in range(num_cols_player1):
+        col_headers.append(chr(ord('Z') - i))
+    col_headers.reverse()
+
+    row_letters = []
+    for i in range(num_rows_player1):
+        row_letters.append(chr(ord('A') + i))
+    
+    pareto_optimal_solutions = []
+
+    for i in range(num_rows_player1):
+        for j in range(num_rows_player2):
+            is_pareto_optimal = all(
+                matrix[0][i][k] >= matrix[0][j][k] for k in range(num_cols_player1)
+            ) and all(
+                matrix[1][k][i] >= matrix[1][k][j] for k in range(num_rows_player2)
+            )
+
+            if is_pareto_optimal:
+                pareto_optimal_solutions.append((i, j))
+
+    for solution in pareto_optimal_solutions:
+        print(f"Pareto optimal solution: Player 1 chooses strategy {row_letters[solution[0]]}, Player 2 chooses strategy {col_headers[solution[1]]}")
+
+    return pareto_optimal_solutions
+
+def identify_minimax_strategies(matrix):
+    num_rows_player1 = len(matrix[0])
+    num_cols_player1 = len(matrix[0][0])
+
+    num_rows_player2 = len(matrix[1])
+    num_cols_player2 = len(matrix[1][0])
+    
+    # Get the header titles
+    col_headers = []
+    for i in range(num_cols_player1):
+        col_headers.append(chr(ord('Z') - i))
+    col_headers.reverse()
+
+    row_letters = []
+    for i in range(num_rows_player1):
+        row_letters.append(chr(ord('A') + i))
+
+    minimax_strategies_player1 = []
+    minimax_strategies_player2 = []
+
+    # Identify minimax strategy for Player 1
+    for i in range(num_rows_player1):
+        max_payoff_player1 = max(matrix[0][i][k] for k in range(num_cols_player1))
+        minimax_strategies_player1.append((i, max_payoff_player1))
+
+    # Identify minimax strategy for Player 2
+    for j in range(num_rows_player2):
+        max_payoff_player2 = max(matrix[1][k][j] for k in range(num_rows_player2))
+        minimax_strategies_player2.append((j, max_payoff_player2))
+
+    # Print results
+    print("Minimax strategy for Player 1:")
+    for strategy in minimax_strategies_player1:
+        print(f"Player 1 chooses strategy {row_letters[strategy[0]]}, ensuring a minimum payoff of {strategy[1]} for Player 1.")
+
+    print("\nMinimax strategy for Player 2:")
+    for strategy in minimax_strategies_player2:
+        print(f"Player 2 chooses strategy {col_headers[strategy[0]]}, ensuring a minimum payoff of {strategy[1]} for Player 2.")
+
+    return minimax_strategies_player1, minimax_strategies_player2
+
+def identify_maximin_strategies(matrix):
+    num_rows_player1 = len(matrix[0])
+    num_cols_player1 = len(matrix[0][0])
+
+    num_rows_player2 = len(matrix[1])
+    num_cols_player2 = len(matrix[1][0])
+
+        # Get the header titles
+    col_headers = []
+    for i in range(num_cols_player1):
+        col_headers.append(chr(ord('Z') - i))
+    col_headers.reverse()
+
+    row_letters = []
+    for i in range(num_rows_player1):
+        row_letters.append(chr(ord('A') + i))
+    
+    maximin_strategies_player1 = []
+    maximin_strategies_player2 = []
+
+    # Identify maximin strategy for Player 1
+    for i in range(num_rows_player1):
+        min_payoff_player1 = min(matrix[0][i][k] for k in range(num_cols_player1))
+        maximin_strategies_player1.append((i, min_payoff_player1))
+
+    # Identify maximin strategy for Player 2
+    for j in range(num_rows_player2):
+        min_payoff_player2 = min(matrix[1][k][j] for k in range(num_rows_player2))
+        maximin_strategies_player2.append((j, min_payoff_player2))
+
+    # Print results
+    print("Maximin strategy for Player 1:")
+    for strategy in maximin_strategies_player1:
+        print(f"Player 1 chooses strategy {row_letters[strategy[0]]}, ensuring a payoff of at least {strategy[1]} for Player 1.")
+
+    print("\nMaximin strategy for Player 2:")
+    for strategy in maximin_strategies_player2:
+        print(f"Player 2 chooses strategy {col_headers[strategy[0]]}, ensuring a payoff of at least {strategy[1]} for Player 2.")
+
+    return maximin_strategies_player1, maximin_strategies_player2
 
 def print_normal_form_table(matrix):
     num_rows = len(matrix[0])
@@ -181,3 +309,9 @@ for path in files:
     identify_weakly_dominated_strategies(matrix)
     print("\n Identify Pure Strategy Equilibria")
     identify_pure_strategy_equilibria(matrix)
+    print("\nIdentify Pareto Optimal Solutions")
+    identify_pareto_optimal_solutions(matrix)
+    print("\nIdentify Minimax Strategies")
+    identify_minimax_strategies(matrix)
+    print("\nIdentify Maximin Strategies")
+    identify_maximin_strategies(matrix)
