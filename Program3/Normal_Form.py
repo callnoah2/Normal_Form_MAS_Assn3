@@ -96,8 +96,37 @@ def identify_weakly_dominated_strategies(matrix):
 
     return row_dominated, col_dominated
 
+def identify_pure_strategy_equilibria(matrix):
+    num_rows_player1 = len(matrix[0])
+    num_cols_player1 = len(matrix[0][0])
+
+    num_rows_player2 = len(matrix[1])
+    num_cols_player2 = len(matrix[1][0])
+
+    pure_equilibria = []
+
+    for i in range(num_rows_player1):
+        for j in range(num_rows_player2):
+            try:
+                # Check if (i, j) is a Nash equilibrium
+                is_nash_equilibrium = all(
+                    matrix[0][i][k] >= matrix[0][j][k] for k in range(min(num_cols_player1, num_cols_player2))
+                ) and all(
+                    matrix[1][k][i] >= matrix[1][k][j] for k in range(min(num_rows_player1, num_rows_player2))
+                )
+
+                if is_nash_equilibrium:
+                    pure_equilibria.append((i, j))
+            except IndexError:
+                print("IndexError occurred. Matrix:", matrix)
+                raise
+
+    for equilibrium in pure_equilibria:
+        print(f"Player 1 chooses strategy {equilibrium[0]}, Player 2 chooses strategy {equilibrium[1]}")
+
+    return pure_equilibria
+
 def print_normal_form_table(matrix):
-    print(matrix)
     num_rows = len(matrix[0])
     num_cols = len(matrix[0][0])
     
@@ -143,6 +172,12 @@ files = [file_pathA, file_pathB, file_pathC, my_file]
 for path in files:
     matrix = read_payoff_matrix(path)
     print("\n", path.strip("Program3/data"))
+    print("\nmatrix\n", matrix)
+    print("\nTable")
     print_normal_form_table(matrix)
+    print("\n Identify Strictly Dominated Strategies")
     identify_strictly_dominated_strategies(matrix)
+    print("\n Identify Weakly Dominated Strategies")
     identify_weakly_dominated_strategies(matrix)
+    print("\n Identify Pure Strategy Equilibria")
+    identify_pure_strategy_equilibria(matrix)
